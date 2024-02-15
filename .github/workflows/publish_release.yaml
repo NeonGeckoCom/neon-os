@@ -60,13 +60,11 @@ jobs:
       - name: Run Neon OS Core Build
         if: ${{ env.DO_CORE }}
         run: |
-          source_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-          bash "${source_dir}/action/neon-os/scripts/build_image.sh" "${source_dir}/action/neon_debos" "${REF}" "debian-neon-image.yml" "${PLATFORMS}" "${OUTPUT_DIR}"
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${REF}" "debian-neon-image.yml" "${PLATFORMS}" "${OUTPUT_DIR}"
       - name: Run Neon OS Node Build
         if: ${{ env.DO_NODE }}
         run: |
-          source_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-          bash "${source_dir}/action/neon-os/scripts/build_image.sh" "${source_dir}/action/neon_debos" "${REF}" "debian-node-image.yml" "${PLATFORMS}" "${OUTPUT_DIR}"
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${REF}" "debian-node-image.yml" "${PLATFORMS}" "${OUTPUT_DIR}"
       - name: Update Metadata
         id: metadata
         run: |
