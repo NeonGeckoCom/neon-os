@@ -79,7 +79,6 @@ jobs:
         with:
           commit_message: Release ${{ steps.metadata.outputs.version }}
           repository: action/neon-os/
-        # TODO: create pre-release
       - name: Create Pre-release
         uses: ncipollo/release-action@v1
         with:
