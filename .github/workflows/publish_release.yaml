@@ -8,7 +8,7 @@ env:
   REF: ${{ github.events.client_payload.ref }}
   PLATFORMS: "rpi4 opi5"
   UPLOAD_URL: "https://2222.us"
-  OUTPUT_DIR: ${{secrets.image_output_dir}}
+  OUTPUT_DIR: /var/www/html/app/files/neon_images
   DO_CORE: contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo))
   DO_NODE: contains(fromJson('["neon-debos", "neon-nodes"]'), github.event.client_payload.repo))
 
@@ -20,7 +20,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ env.REF }}
-          lfs: True
           repository: NeonGeckoCom/neon_debos
           path: action/neon_debos
       - name: Create LFS file list
