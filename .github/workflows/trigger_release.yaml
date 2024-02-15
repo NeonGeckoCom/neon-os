@@ -10,12 +10,14 @@ on:
         default: "neon-debos"
 jobs:
   trigger_build:
-    uses: peter-evans/repository-dispatch@v3
-    with:
-      repository: neongeckocom/neon-os
-      event-type: release
-      client-payload: |-
-        {
-          "ref": "${{ inputs.branch }}",
-          "repo": "${{ inputs.repo }}"
-        }
+    steps:
+    - name: Call Release Action
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        repository: neongeckocom/neon-os
+        event-type: release
+        client-payload: |-
+          {
+            "ref": "${{ inputs.branch }}",
+            "repo": "${{ inputs.repo }}"
+          }
