@@ -60,16 +60,16 @@ jobs:
       - name: Run Neon OS Core Build
         if: ${{ env.DO_CORE }}
         run: |
-          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${REF}" "debian-neon-image.yml" "${PLATFORMS}" "${OUTPUT_DIR}"
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-neon-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}"
       - name: Run Neon OS Node Build
         if: ${{ env.DO_NODE }}
         run: |
-          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${REF}" "debian-node-image.yml" "${PLATFORMS}" "${OUTPUT_DIR}"
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-node-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}"
       - name: Update Metadata
         id: metadata
         run: |
           apt install python3-yaml
-          python3 action/neon-os/scripts/update_metadata.py ${REF}
+          python3 action/neon-os/scripts/update_metadata.py ${{env.REF}}
           echo ::set-output name=version::$(grep "tag" action/neon-os/release_notes.md | cut -d'=' -f2)
       - name: Commit Metadata Updates
         uses: stefanzweifel/git-auto-commit-action@v4
