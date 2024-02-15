@@ -10,6 +10,7 @@ on:
         default: "neon-debos"
 jobs:
   trigger_build:
+    runs-on: ubuntu-latest
     steps:
     - name: Call Release Action
       uses: peter-evans/repository-dispatch@v3
