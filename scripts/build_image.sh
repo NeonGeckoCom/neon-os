@@ -40,7 +40,7 @@ core_limit=${CORE_LIMIT:-32}
 
 debos_version="$(python3 "${debos_dir}/version.py")"
 
-
+[ -d "${debos_dir}/output" ] || mkdir "${debos_dir}/output"
 echo "Building recipe with core=${repo_ref} recipe=${debos_version}"
 chmod ugo+x "${debos_dir}/scripts/"*
 
