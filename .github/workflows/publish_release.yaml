@@ -58,11 +58,11 @@ jobs:
           repository: NeonGeckoCom/neon-os
           path: action/neon-os
       - name: Run Neon OS Core Build
-        if: ${{DO_CORE}}
+        if: ${{ env.DO_CORE }} == 'true'
         run: |
           bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-neon-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}"
       - name: Run Neon OS Node Build
-        if: ${{DO_NODE}}
+        if: ${{ env.DO_NODE }} == 'true'
         run: |
           bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-node-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}"
       - name: Update Metadata
