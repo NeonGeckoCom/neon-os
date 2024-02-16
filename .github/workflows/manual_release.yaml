@@ -16,7 +16,7 @@ jobs:
       uses: peter-evans/repository-dispatch@v3
       with:
         repository: neongeckocom/neon-os
-        event-type: release
+        event-type: Publish Release
         client-payload: |-
           {
             "ref": "${{ inputs.branch }}",
