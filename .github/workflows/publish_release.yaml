@@ -5,7 +5,7 @@ on:
       - release
 
 env:
-  REF: ${{ github.events.client_payload.ref }}
+  REF: ${{ github.event.client_payload.ref }}
   PLATFORMS: "rpi4 opi5"
   UPLOAD_URL: "https://2222.us"
   OUTPUT_DIR: /var/www/html/app/files/neon_images
