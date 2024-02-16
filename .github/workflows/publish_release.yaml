@@ -65,10 +65,14 @@ jobs:
         if: env.DO_NODE == 'true'
         run: |
           bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-node-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}"
+      - name: Stop Docker Build Containers
+        if: failure() || cancelled()
+        run: |
+          docker kill neon_debos_ghaction
       - name: Update Metadata
         id: metadata
         run: |
-          apt install python3-yaml
+          sudo apt update && sudo apt install python3-yaml
           python3 action/neon-os/scripts/update_metadata.py ${{env.REF}}
           echo ::set-output name=version::$(grep "tag" action/neon-os/release_notes.md | cut -d'=' -f2)
       - name: Commit Metadata Updates
@@ -84,7 +88,4 @@ jobs:
           commit: ${{ github.ref }}
           prerelease: true
           bodyFile: action/neon-os/release_notes.md
-      - name: Stop Docker Build Containers
-        if: failure() || cancelled()
-        run: |
-          docker kill neon_debos_ghaction
+
