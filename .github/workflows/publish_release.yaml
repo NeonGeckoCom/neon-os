@@ -9,8 +9,8 @@ env:
   PLATFORMS: "rpi4 opi5"
   UPLOAD_URL: "https://2222.us"
   OUTPUT_DIR: /var/www/html/app/files/neon_images
-  DO_CORE: contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo))
-  DO_NODE: contains(fromJson('["neon-debos", "neon-nodes"]'), github.event.client_payload.repo))
+  DO_CORE: ${{ contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo)) }}
+  DO_NODE: ${{ contains(fromJson('["neon-debos", "neon-nodes"]'), github.event.client_payload.repo)) }}
 
 jobs:
   build_images:
