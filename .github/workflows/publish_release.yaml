@@ -73,13 +73,13 @@ jobs:
         id: metadata
         run: |
           sudo apt update && sudo apt install python3-yaml
-          python3 action/neon-os/scripts/update_metadata.py ${{env.REF}}
+          python3 "${{ github.workspace }}/action/neon-os/scripts/update_metadata.py" ${{env.REF}}
           echo ::set-output name=version::$(grep "tag" action/neon-os/release_notes.md | cut -d'=' -f2)
       - name: Commit Metadata Updates
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Release ${{ steps.metadata.outputs.version }}
-          repository: action/neon-os/
+          repository: "${{ github.workspace }}/action/neon-os/"
       - name: Create Pre-release
         uses: ncipollo/release-action@v1
         with:
@@ -87,5 +87,5 @@ jobs:
           tag: ${{steps.metadata.outputs.version}}
           commit: ${{ github.ref }}
           prerelease: true
-          bodyFile: action/neon-os/release_notes.md
+          bodyFile: "${{ github.workspace }}/action/neon-os/release_notes.md"
 
