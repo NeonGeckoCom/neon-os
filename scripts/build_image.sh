@@ -70,7 +70,7 @@ for platform in ${platforms}; do
   # Add `download_url` metadata to json output
   url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")"
   sed -i -e "s|^{|{\n  \"download_url\": \"${url}\",|g" "${debos_dir}/output/"*.json
-  cp "${debos_dir}/output/"*.json "${os_dir}/"  # Copy metadata for upload/parse
+  cp "${debos_dir}/output/"*.json "${os_dir}/../"  # Copy metadata for upload/parse
   mv "${debos_dir}/output/"*.img.xz "${output_path}/${repo_ref}"  # Image File
   mv "${debos_dir}/output/"*.squashfs "${output_dir}/updates/${repo_ref}"  # Update File
   mv "${debos_dir}/output/"*.json "${output_dir}/updates/${repo_ref}"  # Update Metadata
