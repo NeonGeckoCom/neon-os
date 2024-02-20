@@ -33,7 +33,7 @@ recipe=${3}  # debian-neon-image.yml, debian-node-image.yml
 platforms=${4}  # "rpi4 opi5"
 output_dir=${5}  # /var/www/html/app/files/neon_images
 base_url=${6}  # https://2222.us
-os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
 mem_limit=${MEM_LIMIT:-"64G"}
 core_limit=${CORE_LIMIT:-32}
@@ -63,17 +63,23 @@ for platform in ${platforms}; do
 
   # Determine Server Path for outputs
   output_path="${output_dir}/${platform}/"
+  update_path="${output_dir}/updates/${platform}/"
   if [[ "${recipe}" == *node* ]]; then
     output_path="${output_dir}/node/${platform}/"
+    update_path="${output_dir}/node/updates/${platform}/"
   fi
+
+  # Ensure directories exist
+  [ -d "${output_path}" ] || mkdir -p "${output_path}"
+  [ -d "${update_path}" ] || mkdir -p "${update_path}"
 
   # Add `download_url` metadata to json output
   url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")"
   sed -i -e "s|^{|{\n  \"download_url\": \"${url}\",|g" "${debos_dir}/output/"*.json
-  cp "${debos_dir}/output/"*.json "${os_dir}/../"  # Copy metadata for upload/parse
-  mv "${debos_dir}/output/"*.img.xz "${output_path}/${repo_ref}"  # Image File
-  mv "${debos_dir}/output/"*.squashfs "${output_dir}/updates/${repo_ref}"  # Update File
-  mv "${debos_dir}/output/"*.json "${output_dir}/updates/${repo_ref}"  # Update Metadata
+  cp "${debos_dir}/output/"*.json "${os_dir}"  # Copy metadata for upload/parse
+  mv "${debos_dir}/output/"*.img.xz "${output_path}${repo_ref}/"  # Image File
+  mv "${debos_dir}/output/"*.squashfs "${update_path}${repo_ref}/"  # Update File
+  mv "${debos_dir}/output/"*.json "${update_path}${repo_ref}/"  # Update Metadata
 done
 
 echo "completed ${timestamp}"
