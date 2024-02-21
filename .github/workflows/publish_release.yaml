@@ -27,14 +27,13 @@ jobs:
         run: |
           cd action/neon_debos
           git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
-          cat .lfs-assets-id
           cd ../..
       - name: Restore LFS cache
         uses: actions/cache@v3
         id: lfs-cache
         with:
           path: action/neon_debos/.git/lfs
-          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1
+          key: ${{ runner.os }}-lfs-${{ hashFiles('action/neon_debos/.lfs-assets-id') }}-v1
       - name: Ensure LFS files are pulled
         if: steps.lfs-cache.outputs.cache-hit != 'true'
         run: |
