@@ -17,15 +17,17 @@ jobs:
     runs-on: 2222.us
     steps:
       - name: Checkout Debos Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.REF }}
           repository: NeonGeckoCom/neon_debos
           path: action/neon_debos
+          lfs: False
       - name: Create LFS file list
         run: |
           cd action/neon_debos
           git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+          cat .lfs-assets-id
           cd ../..
       - name: Restore LFS cache
         uses: actions/cache@v3
