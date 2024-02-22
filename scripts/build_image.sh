@@ -49,7 +49,7 @@ for platform in ${platforms}; do
   if [ "${platform}" == "rpi4" ]; then
     device="mark_2"
   else
-    platform="${device}"
+    device="${platform}"
   fi
   docker run --rm \
   --device /dev/kvm \
