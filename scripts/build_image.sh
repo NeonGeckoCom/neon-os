@@ -45,6 +45,12 @@ echo "Building recipe with core=${repo_ref} recipe=${debos_version}"
 chmod ugo+x "${debos_dir}/scripts/"*
 
 for platform in ${platforms}; do
+  # TODO: Refactor builds to be platform-specific and not device-specific
+  if [ "${platform}" == "rpi4" ]; then
+    device="mark_2"
+  else
+    platform="${device}"
+  fi
   docker run --rm \
   --device /dev/kvm \
   --workdir /image_build \
@@ -53,7 +59,8 @@ for platform in ${platforms}; do
   --security-opt label=disable \
   --name neon_debos_ghaction \
   godebos/debos "${recipe}" \
-  -t device:"${platform}" \
+  -t platform:"${platform}" \
+  -t device:"${device}" \
   -t architecture:arm64 -t \
   image:"${recipe%.*}-${platform}_${timestamp}" \
   -t neon_core:"${repo_ref}" \
