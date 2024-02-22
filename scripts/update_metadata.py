@@ -90,7 +90,7 @@ def update_build_indices(beta: bool) -> List[dict]:
         # Determine new version
         val["version"] = datetime.fromtimestamp(
             val["base_os"]["time"]).strftime("%y.%m.%d")
-        if beta and "b" in meta[0]["version"]:
+        if beta and meta and "b" in meta[0]["version"]:
             new_beta = int(meta[0]["version"].split("b")) + 1
             val["version"] = f'{val["version"]}b{new_beta}'
         elif beta:
