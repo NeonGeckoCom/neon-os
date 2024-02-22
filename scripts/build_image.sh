@@ -39,7 +39,7 @@ mem_limit=${MEM_LIMIT:-"64G"}
 core_limit=${CORE_LIMIT:-32}
 
 debos_version="$(python3 "${debos_dir}/version.py")"
-
+image_id="${recipe%.*}-${platform}_${timestamp}"
 [ -d "${debos_dir}/output" ] || mkdir "${debos_dir}/output"
 echo "Building recipe with core=${repo_ref} recipe=${debos_version}"
 chmod ugo+x "${debos_dir}/scripts/"*
@@ -62,7 +62,7 @@ for platform in ${platforms}; do
   -t platform:"${platform}" \
   -t device:"${device}" \
   -t architecture:arm64 -t \
-  image:"${recipe%.*}-${platform}_${timestamp}" \
+  image:"${image_id}" \
   -t neon_core:"${repo_ref}" \
   -t neon_debos:"${debos_version}" \
   -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2
@@ -81,12 +81,12 @@ for platform in ${platforms}; do
   [ -d "${update_path}${repo_ref}" ] || mkdir -p "${update_path}${repo_ref}"
 
   # Add `download_url` metadata to json output
-  url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")"
+  url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")${repo_ref}/${image_id}.img.xz"
   sed -i -e "s|^{|{\n  \"download_url\": \"${url}\",|g" "${debos_dir}/output/"*.json
-  cp "${debos_dir}/output/"*.json "${os_dir}"  # Copy metadata for upload/parse
-  mv "${debos_dir}/output/"*.img.xz "${output_path}${repo_ref}/"  # Image File
-  mv "${debos_dir}/output/"*.squashfs "${update_path}${repo_ref}/"  # Update File
-  mv "${debos_dir}/output/"*.json "${update_path}${repo_ref}/"  # Update Metadata
+  cp "${debos_dir}/output/${image_id}.json" "${os_dir}"  # Copy metadata for upload/parse
+  mv "${debos_dir}/output/${image_id}.img.xz" "${output_path}${repo_ref}/"  # Image File
+  mv "${debos_dir}/output/${image_id}.squashfs" "${update_path}${repo_ref}/"  # Update File
+  mv "${debos_dir}/output/${image_id}.json" "${update_path}${repo_ref}/"  # Update Metadata
 done
 
 echo "completed ${timestamp}"

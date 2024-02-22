@@ -124,11 +124,11 @@ def write_changelog(new_images: List[dict]):
     tag = f"{date_ver}.beta" if beta else date_ver
 
     release_strings = [(f"[{image['image']} {image['version']}]"
-                        f"({image['download']})") for image in new_images]
+                        f"({image['download']})\n") for image in new_images]
     with open(release_notes, 'w') as f:
-        f.writelines([title,
-                      "This is an automated release",
-                      f"tag={tag}",
+        f.writelines([f"{title}\n",
+                      "This is an automated release\n",
+                      f"tag={tag}\n",
                       "\n## Release Images"] +
                      release_strings)
 
