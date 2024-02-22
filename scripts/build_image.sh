@@ -70,8 +70,8 @@ for platform in ${platforms}; do
   fi
 
   # Ensure directories exist
-  [ -d "${output_path}" ] || mkdir -p "${output_path}"
-  [ -d "${update_path}" ] || mkdir -p "${update_path}"
+  [ -d "${output_path}${repo_ref}" ] || mkdir -p "${output_path}${repo_ref}"
+  [ -d "${update_path}${repo_ref}" ] || mkdir -p "${update_path}${repo_ref}"
 
   # Add `download_url` metadata to json output
   url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")"
