@@ -46,7 +46,7 @@ jobs:
         uses: actions/cache/save@v3
         with:
           path: action/neon_debos/.git/lfs
-          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}-v1
+          key: ${{ runner.os }}-lfs-${{ hashFiles('action/neon_debos/.lfs-assets-id') }}-v1
       - name: Export keys for image build
         run: |
           mkdir -p action/neon_debos/overlays/80-google-json-overlay/home/neon/.local/share/neon
