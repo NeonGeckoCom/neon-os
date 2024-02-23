@@ -39,13 +39,13 @@ mem_limit=${MEM_LIMIT:-"64G"}
 core_limit=${CORE_LIMIT:-32}
 
 debos_version="$(python3 "${debos_dir}/version.py")"
-image_id="${recipe%.*}-${platform}_${timestamp}"
 
 [ -d "${debos_dir}/output" ] || mkdir "${debos_dir}/output"
 echo "Building recipe with core=${repo_ref} recipe=${debos_version}"
 chmod ugo+x "${debos_dir}/scripts/"*
 
 for platform in ${platforms}; do
+  image_id="${recipe%.*}-${platform}_${timestamp}"
   # TODO: Refactor builds to be platform-specific and not device-specific
   if [ "${platform}" == "rpi4" ]; then
     device="mark_2"
