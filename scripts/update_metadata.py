@@ -138,13 +138,13 @@ def write_changelog(new_images: List[dict]):
         f"# Neon OS Release {date_ver}"
     tag = f"{date_ver}.beta{beta}" if beta else date_ver
 
-    release_strings = [(f"[{image['image']} {image['version']}]"
+    release_strings = [(f"- [{image['image']} {image['version']}]"
                         f"({image['download']})\n") for image in new_images]
     with open(release_notes, 'w') as f:
         f.writelines([f"{title}\n",
-                      "This is an automated release\n",
-                      f"tag={tag}\n",
-                      "\n## Release Images\n"] +
+                      "This is an automated release\n\n",
+                      f"tag={tag}\n\n",
+                      "## Release Images\n"] +
                      release_strings)
 
 
