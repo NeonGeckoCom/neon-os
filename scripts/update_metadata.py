@@ -131,6 +131,8 @@ def write_changelog(new_images: List[dict]):
             except Exception as e:
                 print(e)
                 beta = 1
+        else:
+            beta = 1
 
     title = f"# Neon OS Beta Release {date_ver}" if beta else \
         f"# Neon OS Release {date_ver}"
