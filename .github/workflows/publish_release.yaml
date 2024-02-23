@@ -73,7 +73,6 @@ jobs:
       - name: Update Metadata
         id: metadata
         run: |
-          sudo apt update && sudo apt install python3-yaml
           python3 "${{ github.workspace }}/action/neon-os/scripts/update_metadata.py" ${{env.REF}}
           echo ::set-output name=version::$(grep "tag" action/neon-os/release_notes.md | cut -d'=' -f2)
       - name: Commit Metadata Updates

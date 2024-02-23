@@ -142,7 +142,7 @@ def write_changelog(new_images: List[dict]):
         f.writelines([f"{title}\n",
                       "This is an automated release\n",
                       f"tag={tag}\n",
-                      "\n## Release Images"] +
+                      "\n## Release Images\n"] +
                      release_strings)
 
 
