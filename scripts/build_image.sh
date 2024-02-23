@@ -78,6 +78,9 @@ for platform in ${platforms}; do
   if [[ "${recipe}" == *node* ]]; then
     output_path="${output_dir}/node/${platform}/"
     update_path="${output_dir}/node/${platform}/updates/"
+  elif [[ "${recipe}" == *neon* ]]; then
+    output_path="${output_dir}/core/${platform}/"
+    update_path="${output_dir}/core/${platform}/updates/"
   fi
 
   # Ensure directories exist
