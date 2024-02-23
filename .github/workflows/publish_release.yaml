@@ -6,7 +6,7 @@ on:
 
 env:
   REF: ${{ github.event.client_payload.ref }}
-  PLATFORMS: "opi5"
+  PLATFORMS: "rpi4 opi5"
   UPLOAD_URL: "https://2222.us"
   OUTPUT_DIR: /var/www/html/app/files/neon_images
   DO_CORE: ${{ contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo) }}
