@@ -74,10 +74,10 @@ for platform in ${platforms}; do
 
   # Determine Server Path for outputs
   output_path="${output_dir}/${platform}/"
-  update_path="${output_dir}/updates/${platform}/"
+  update_path="${output_dir}/${platform}/updates/"
   if [[ "${recipe}" == *node* ]]; then
     output_path="${output_dir}/node/${platform}/"
-    update_path="${output_dir}/node/updates/${platform}/"
+    update_path="${output_dir}/node/${platform}/updates/"
   fi
 
   # Ensure directories exist
