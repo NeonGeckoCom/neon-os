@@ -40,6 +40,7 @@ core_limit=${CORE_LIMIT:-32}
 
 debos_version="$(python3 "${debos_dir}/version.py")"
 image_id="${recipe%.*}-${platform}_${timestamp}"
+
 [ -d "${debos_dir}/output" ] || mkdir "${debos_dir}/output"
 echo "Building recipe with core=${repo_ref} recipe=${debos_version}"
 chmod ugo+x "${debos_dir}/scripts/"*
@@ -48,8 +49,10 @@ for platform in ${platforms}; do
   # TODO: Refactor builds to be platform-specific and not device-specific
   if [ "${platform}" == "rpi4" ]; then
     device="mark_2"
+    kernel_version="6.1.77-gecko+"
   else
     device="${platform}"
+    kernel_version="5.10.110-gecko+"
   fi
   docker run --rm \
   --device /dev/kvm \
@@ -61,8 +64,9 @@ for platform in ${platforms}; do
   godebos/debos "${recipe}" \
   -t platform:"${platform}" \
   -t device:"${device}" \
-  -t architecture:arm64 -t \
-  image:"${image_id}" \
+  -t kernel_version:"${kernel_version}" \
+  -t architecture:arm64 \
+  -t image:"${image_id}" \
   -t neon_core:"${repo_ref}" \
   -t neon_debos:"${debos_version}" \
   -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2

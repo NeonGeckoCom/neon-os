@@ -114,14 +114,27 @@ def update_build_indices(beta: bool) -> List[dict]:
 
 def write_changelog(new_images: List[dict]):
     release_notes = join(dirname(dirname(__file__)), "release_notes.md")
+    if isfile(release_notes):
+        with open(release_notes, 'r') as f:
+            content = f.readlines()
+        old_version = [line for line in content if
+                       line.startswith("tag")][0].split('=')[1].strip()
+    else:
+        old_version = None
     date_ver = new_images[0]['version']
-    beta = "False"
+    beta = False
     if 'b' in date_ver:
         date_ver = date_ver.split('b')[0]
-        beta = True
+        if date_ver in old_version and "beta" in old_version:
+            try:
+                beta = int(old_version.split('beta')[1]) + 1
+            except Exception as e:
+                print(e)
+                beta = 1
+
     title = f"# Neon OS Beta Release {date_ver}" if beta else \
         f"# Neon OS Release {date_ver}"
-    tag = f"{date_ver}.beta" if beta else date_ver
+    tag = f"{date_ver}.beta{beta}" if beta else date_ver
 
     release_strings = [(f"[{image['image']} {image['version']}]"
                         f"({image['download']})\n") for image in new_images]
