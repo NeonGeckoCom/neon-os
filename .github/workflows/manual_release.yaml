@@ -1,0 +1,24 @@
+name: Manual Release
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        default: "dev"
+      repo:
+        type: string
+        default: "neon-debos"
+jobs:
+  trigger_build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Call Release Action
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        repository: neongeckocom/neon-os
+        event-type: Publish Release
+        client-payload: |-
+          {
+            "ref": "${{ inputs.branch }}",
+            "repo": "${{ inputs.repo }}"
+          }

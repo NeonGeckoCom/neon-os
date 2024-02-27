@@ -1,0 +1,91 @@
+name: Publish Release
+on:
+  repository_dispatch:
+    types:
+      - Publish Release
+
+env:
+  REF: ${{ github.event.client_payload.ref }}
+  PLATFORMS: "rpi4 opi5"
+  UPLOAD_URL: "https://2222.us"
+  OUTPUT_DIR: /var/www/html/app/files/neon_images
+  DO_CORE: ${{ contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo) }}
+  DO_NODE: ${{ contains(fromJson('["neon-debos", "neon-nodes"]'), github.event.client_payload.repo) }}
+
+jobs:
+  build_images:
+    runs-on: 2222.us
+    steps:
+      - name: Checkout Debos Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REF }}
+          repository: NeonGeckoCom/neon_debos
+          path: action/neon_debos
+          lfs: False
+      - name: Create LFS file list
+        run: |
+          cd action/neon_debos
+          git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+          cd ../..
+      - name: Restore LFS cache
+        uses: actions/cache@v3
+        id: lfs-cache
+        with:
+          path: action/neon_debos/.git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('action/neon_debos/.lfs-assets-id') }}-v1
+      - name: Ensure LFS files are pulled
+        if: steps.lfs-cache.outputs.cache-hit != 'true'
+        run: |
+          cd action/neon_debos
+          git lfs pull
+          cd ../..
+      - name: Save LFS Cache
+        if: steps.lfs-cache.outputs.cache-hit != 'true'
+        id: lfs-cache-save
+        uses: actions/cache/save@v3
+        with:
+          path: action/neon_debos/.git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('action/neon_debos/.lfs-assets-id') }}-v1
+      - name: Export keys for image build
+        run: |
+          mkdir -p action/neon_debos/overlays/80-google-json-overlay/home/neon/.local/share/neon
+          echo ${GOOGLE_KEY}>action/neon_debos/overlays/80-google-json-overlay/home/neon/.local/share/neon/google.json
+        env:
+          GOOGLE_KEY: ${{secrets.google_api_key}}
+      - name: Checkout NeonOS Repository
+        uses: actions/checkout@v3
+        with:
+          repository: NeonGeckoCom/neon-os
+          path: action/neon-os
+      - name: Run Neon OS Core Build
+        if: env.DO_CORE == 'true'
+        run: |
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-neon-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}" "${{env.UPLOAD_URL}}"
+      - name: Run Neon OS Node Build
+        if: env.DO_NODE == 'true'
+        run: |
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-node-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}" "${{env.UPLOAD_URL}}"
+      - name: Stop Docker Build Containers
+        if: failure() || cancelled()
+        run: |
+          docker kill neon_debos_ghaction
+      - name: Update Metadata
+        id: metadata
+        run: |
+          python3 "${{ github.workspace }}/action/neon-os/scripts/update_metadata.py" ${{env.REF}}
+          echo ::set-output name=version::$(grep "tag" action/neon-os/release_notes.md | cut -d'=' -f2)
+      - name: Commit Metadata Updates
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Release ${{ steps.metadata.outputs.version }}
+          repository: "${{ github.workspace }}/action/neon-os/"
+      - name: Create Pre-release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          tag: ${{steps.metadata.outputs.version}}
+          commit: ${{ github.ref }}
+          prerelease: true
+          bodyFile: "${{ github.workspace }}/action/neon-os/release_notes.md"
+
