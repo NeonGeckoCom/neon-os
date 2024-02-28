@@ -114,13 +114,15 @@ def update_build_indices(beta: bool) -> List[dict]:
 
 def write_changelog(new_images: List[dict]):
     release_notes = join(dirname(dirname(__file__)), "release_notes.md")
-    if isfile(release_notes):
-        with open(release_notes, 'r') as f:
-            content = f.readlines()
-        old_version = [line for line in content if
-                       line.startswith("tag")][0].split('=')[1].strip()
-    else:
-        old_version = None
+    old_version = ""
+    try:
+        if isfile(release_notes):
+            with open(release_notes, 'r') as f:
+                content = f.readlines()
+            old_version = [line for line in content if
+                           line.startswith("tag")][0].split('=')[1].strip()
+    except Exception as e:
+        print(f"Error parsing release_notes.md: {e}")
     date_ver = new_images[0]['version']
     beta = False
     if 'b' in date_ver:
@@ -129,7 +131,7 @@ def write_changelog(new_images: List[dict]):
             try:
                 beta = int(old_version.split('beta')[1]) + 1
             except Exception as e:
-                print(e)
+                print(f"Error parsing beta version from {old_version}: {e}")
                 beta = 1
         else:
             beta = 1
