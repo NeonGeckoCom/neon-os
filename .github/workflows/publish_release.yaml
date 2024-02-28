@@ -50,7 +50,7 @@ jobs:
       - name: Check for Debos base image downloads
         run: | 
           [ -f action/neon_debos/base_images/download_base_images.py ] && \
-          python3 action/neon_debos/base_images/download_base_images.py
+          python3 action/neon_debos/base_images/download_base_images.py || echo "Using repo-cached base images"
       - name: Export keys for image build
         run: |
           mkdir -p action/neon_debos/overlays/80-google-json-overlay/home/neon/.local/share/neon
