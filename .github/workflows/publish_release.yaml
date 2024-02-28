@@ -47,6 +47,10 @@ jobs:
         with:
           path: action/neon_debos/.git/lfs
           key: ${{ runner.os }}-lfs-${{ hashFiles('action/neon_debos/.lfs-assets-id') }}-v1
+      - name: Check for Debos base image downloads
+        run: | 
+          [ -f action/neon_debos/base_images/download_base_images.py ] && \
+          python3 action/neon_debos/base_images/download_base_images.py
       - name: Export keys for image build
         run: |
           mkdir -p action/neon_debos/overlays/80-google-json-overlay/home/neon/.local/share/neon
@@ -61,11 +65,23 @@ jobs:
       - name: Run Neon OS Core Build
         if: env.DO_CORE == 'true'
         run: |
-          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-neon-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}" "${{env.UPLOAD_URL}}"
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" \
+          "${{ github.workspace }}/action/neon_debos" \
+          "${{env.REF}}" \
+          "debian-neon-image.yml" \
+          "${{env.PLATFORMS}}" \
+          "${{env.OUTPUT_DIR}}" \
+          "${{env.UPLOAD_URL}}"
       - name: Run Neon OS Node Build
         if: env.DO_NODE == 'true'
         run: |
-          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" "${{ github.workspace }}/action/neon_debos" "${{env.REF}}" "debian-node-image.yml" "${{env.PLATFORMS}}" "${{env.OUTPUT_DIR}}" "${{env.UPLOAD_URL}}"
+          bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" \
+          "${{ github.workspace }}/action/neon_debos" \
+          "${{env.REF}}" \
+          "debian-node-image.yml" \
+          "${{env.PLATFORMS}}" \
+          "${{env.OUTPUT_DIR}}" \
+          "${{env.UPLOAD_URL}}"
       - name: Stop Docker Build Containers
         if: failure() || cancelled()
         run: |
