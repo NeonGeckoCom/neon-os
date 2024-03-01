@@ -87,20 +87,21 @@ def update_build_indices(beta: bool) -> List[dict]:
         else:
             meta = list()
 
-        # Determine new version
-        val["version"] = datetime.fromtimestamp(
-            val["base_os"]["time"]).strftime("%y.%m.%d")
-        if beta and meta and "b" in meta[0]["version"]:
-            new_beta = int(meta[0]["version"].split("b")[1]) + 1
-            val["version"] = f'{val["version"]}b{new_beta}'
-        elif beta:
-            val["version"] = f'{val["version"]}b1'
+        if not val.get("build_version"):
+            # Determine new version
+            val["build_version"] = datetime.fromtimestamp(
+                val["base_os"]["time"]).strftime("%y.%m.%d")
+            if beta and meta and "b" in meta[0]["build_version"]:
+                new_beta = int(meta[0]["build_version"].split("b")[1]) + 1
+                val["build_version"] = f'{val["build_version"]}b{new_beta}'
+            elif beta:
+                val["build_version"] = f'{val["build_version"]}b1'
 
         # Add new builds to the top of the list
         meta.insert(0, val)
         all_meta.insert(0, val)
         new_images.append({"image": val['base_os']['name'],
-                           "version": val["version"],
+                           "version": val["build_version"],
                            "download": val['download_url']})
 
         with open(meta_file, 'w') as f:
@@ -136,12 +137,13 @@ def write_changelog(new_images: List[dict]):
         else:
             beta = 1
 
-    title = f"# Neon OS Beta Release {date_ver}" if beta else \
+    title = f"# Neon OS Beta Release {date_ver}b{beta}" if beta else \
         f"# Neon OS Release {date_ver}"
-    tag = f"{date_ver}.beta{beta}" if beta else date_ver
+    tag = f"{date_ver}b{beta}" if beta else date_ver
 
     release_strings = [(f"- [{image['image']} {image['version']}]"
                         f"({image['download']})\n") for image in new_images]
+    release_strings.sort()
     with open(release_notes, 'w') as f:
         f.writelines([f"{title}\n",
                       "This is an automated release\n\n",

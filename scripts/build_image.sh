@@ -35,8 +35,8 @@ output_dir=${5}  # /var/www/html/app/files/neon_images
 base_url=${6}  # https://2222.us
 os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
-mem_limit=${MEM_LIMIT:-"64G"}
-core_limit=${CORE_LIMIT:-32}
+mem_limit=${MEM_LIMIT:-"32G"}
+core_limit=${CORE_LIMIT:-8}
 
 debos_version="$(python3 "${debos_dir}/version.py")"
 
@@ -46,6 +46,7 @@ chmod ugo+x "${debos_dir}/scripts/"*
 
 for platform in ${platforms}; do
   image_id="${recipe%.*}-${platform}_${timestamp}"
+  build_version=$(python3 "${os_dir}/scripts/get_build_version.py" "${recipe%.*}" "${platform}" "${repo_ref}" "${timestamp}")
   # TODO: Refactor builds to be platform-specific and not device-specific
   if [ "${platform}" == "rpi4" ]; then
     device="mark_2"
@@ -69,6 +70,7 @@ for platform in ${platforms}; do
   -t image:"${image_id}" \
   -t neon_core:"${repo_ref}" \
   -t neon_debos:"${debos_version}" \
+  -t build_version:"${build_version}" \
   -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2
   echo "Completed build: ${platform}"
 
