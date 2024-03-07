@@ -62,6 +62,7 @@ jobs:
         with:
           repository: NeonGeckoCom/neon-os
           path: action/neon-os
+          ref: master
       - name: Run Neon OS Core Build
         if: env.DO_CORE == 'true'
         run: |
