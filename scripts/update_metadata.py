@@ -128,7 +128,7 @@ def write_changelog(new_images: List[dict]):
     beta = False
     if 'b' in date_ver:
         date_ver = date_ver.split('b')[0]
-        if date_ver in old_version and "beta" in old_version:
+        if date_ver in old_version and "b" in old_version:
             try:
                 beta = int(old_version.split('beta')[1]) + 1
             except Exception as e:
