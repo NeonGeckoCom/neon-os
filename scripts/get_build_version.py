@@ -46,7 +46,7 @@ def get_version_for_build(build_id: str, beta: bool, time_str: str) -> str:
         if isfile(join(base_dir, f"{build_id}.yaml")):
             with open(join(base_dir, f"{build_id}.yaml")) as f:
                 build_info = yaml.safe_load(f)[0]
-            previous_beta = int(build_info['version'].split('b')[1])
+            previous_beta = int(build_info['build_version'].split('b')[1])
     except:
         pass
 
