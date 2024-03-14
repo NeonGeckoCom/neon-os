@@ -1,10 +1,8 @@
-# Neon OS Beta Release 24.03.13b1
+# Neon OS Beta Release 24.03.13b2
 This is an automated release
 
-tag=24.03.13b1
+tag=24.03.13b2
 
 ## Release Images
-- [debian-neon-image-opi5 24.03.13b5](https://2222.us/app/files/neon_images/core/opi5/dev/debian-neon-image-opi5_2024-03-13_19_56.img.xz)
-- [debian-neon-image-rpi4 24.03.13b5](https://2222.us/app/files/neon_images/core/rpi4/dev/debian-neon-image-rpi4_2024-03-13_19_56.img.xz)
-- [debian-node-image-opi5 24.03.13b2](https://2222.us/app/files/neon_images/node/opi5/dev/debian-node-image-opi5_2024-03-13_22_39.img.xz)
-- [debian-node-image-rpi4 24.03.13b2](https://2222.us/app/files/neon_images/node/rpi4/dev/debian-node-image-rpi4_2024-03-13_22_39.img.xz)
+- [debian-neon-image-opi5 24.03.13b6](https://2222.us/app/files/neon_images/core/opi5/dev/debian-neon-image-opi5_2024-03-13_23_35.img.xz)
+- [debian-neon-image-rpi4 24.03.13b6](https://2222.us/app/files/neon_images/core/rpi4/dev/debian-neon-image-rpi4_2024-03-13_23_35.img.xz)
