@@ -4,6 +4,30 @@
     edition: Node
     name: debian-node-image-rpi4
     platform: rpi4
+    time: 1710394740.0
+  build_version: 24.03.13b2
+  core:
+    sha: 7ee385fc9aee414f28100971f901779c506ea65f
+    time: 1710374117.0
+    version: 0.0.1a7
+  download_url: https://2222.us/app/files/neon_images/node/rpi4/dev/debian-node-image-rpi4_2024-03-13_22_39.img.xz
+  image:
+    sha: aad4026f8da82d03242a4b9f9082b1a0ad3142e1
+    time: 1710374061.0
+    version: 24.3.13a15
+  initramfs:
+    md5: 1711c898c1ea85974f1b2b3dd48616a6
+    path: /boot/firmware/initramfs
+  kernel:
+    filename: kernel8.img
+    md5: 19d0732a45a1342383223e6f9de8980f
+    version: 6.1.77-gecko+
+- base_os:
+    arch: arm64
+    device: mark_2
+    edition: Node
+    name: debian-node-image-rpi4
+    platform: rpi4
     time: 1709945100.0
   build_version: 24.03.08b1
   core:
