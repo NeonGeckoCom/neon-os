@@ -4,6 +4,30 @@
     edition: Node
     name: debian-node-image-opi5
     platform: opi5
+    time: 1712099400.0
+  build_version: 24.04.02b13
+  core:
+    sha: a31f3c81662fc9b3f95265130d1d1dbb32b4c8d2
+    time: 1712022347.0
+    version: 0.0.1a7
+  download_url: https://2222.us/app/files/neon_images/node/opi5/dev/debian-node-image-opi5_2024-04-02_16_10.img.xz
+  image:
+    sha: 82d8a0c13e90594ecc885a43c9bbaf1468f0c59d
+    time: 1712078752.0
+    version: 24.4.2a27
+  initramfs:
+    md5: a628a2e47f10b9098ca982969ccec28f
+    path: /boot/uInitrd
+  kernel:
+    filename: Image
+    md5: fec3372f0c4616f26a9520dc39ef0e7a
+    version: 5.10.110-gecko+
+- base_os:
+    arch: arm64
+    device: opi5
+    edition: Node
+    name: debian-node-image-opi5
+    platform: opi5
     time: 1712013300.0
   build_version: 24.04.01b12
   core:
