@@ -27,6 +27,6 @@ jobs:
           {
             "ref": "${{ inputs.branch }}",
             "repo": "${{ inputs.repo }}",
-            "debos_ref": "${{ inputs.debos_branch }}"
+            "debos_ref": "${{ inputs.debos_branch }}",
             "core_ref": "${{ inputs.core_branch }}"
           }
