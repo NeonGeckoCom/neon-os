@@ -5,6 +5,12 @@ on:
       branch:
         type: string
         default: "dev"
+      core_branch:
+        type: string
+        default: None
+      debos_branch:
+        type: string
+        default: None
       repo:
         type: string
         default: "neon-debos"
@@ -20,5 +26,7 @@ jobs:
         client-payload: |-
           {
             "ref": "${{ inputs.branch }}",
-            "repo": "${{ inputs.repo }}"
+            "repo": "${{ inputs.repo }}",
+            "debos_ref": "${{ inputs.debos_branch }}"
+            "core_ref": "${{ inputs.core_branch }}"
           }
