@@ -5,7 +5,9 @@ on:
       - Publish Release
 
 env:
-  REF: ${{ github.event.client_payload.ref }}
+  REF: ${{ github.event.client_payload.ref || 'dev' }}
+  DEBOS_REF: ${{ github.event.client_payload.debos_ref || github.event.client_payload.ref }}
+  CORE_REF: ${{ github.event.client_payload.core_ref || github.event.client_payload.ref }}
   PLATFORMS: "rpi4 opi5"
   UPLOAD_URL: "https://2222.us"
   OUTPUT_DIR: /var/www/html/app/files/neon_images
@@ -16,10 +18,20 @@ jobs:
   build_images:
     runs-on: 2222.us
     steps:
+      - name: Log Job
+        run: |
+          echo "REF=${{env.REF}}" 
+          echo "DEBOS_REF=${{env.DEBOS_REF}}" 
+          echo "CORE_REF=${{env.CORE_REF}}" 
+          echo "PLATFORMS=${{env.PLATFORMS}}"
+          echo "UPLOAD_URL=${{env.UPLOAD_URL}}" 
+          echo "OUTPUT_DIR=${{env.OUTPUT_DIR}}" 
+          echo "DO_CORE=${{env.DO_CORE}}" 
+          echo "DO_NODE=${{env.DO_NODE}}"
       - name: Checkout Debos Repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.REF }}
+          ref: ${{ env.DEBOS_REF }}
           repository: NeonGeckoCom/neon_debos
           path: action/neon_debos
           lfs: False
@@ -68,7 +80,7 @@ jobs:
         run: |
           bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" \
           "${{ github.workspace }}/action/neon_debos" \
-          "${{env.REF}}" \
+          "${{env.CORE_REF}}" \
           "debian-neon-image.yml" \
           "${{env.PLATFORMS}}" \
           "${{env.OUTPUT_DIR}}" \
@@ -78,7 +90,7 @@ jobs:
         run: |
           bash "${{ github.workspace }}/action/neon-os/scripts/build_image.sh" \
           "${{ github.workspace }}/action/neon_debos" \
-          "${{env.REF}}" \
+          "${{env.CORE_REF}}" \
           "debian-node-image.yml" \
           "${{env.PLATFORMS}}" \
           "${{env.OUTPUT_DIR}}" \
