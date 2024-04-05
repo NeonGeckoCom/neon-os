@@ -18,6 +18,16 @@ jobs:
   build_images:
     runs-on: 2222.us
     steps:
+      - name: Log Job
+        run: |
+          echo "REF=${{env.REF}}" 
+          echo "DEBOS_REF=${{env.DEBOS_REF}}" 
+          echo "CORE_REF=${{env.CORE_REF}}" 
+          echo "PLATFORMS=${{env.PLATFORMS}}"
+          echo "UPLOAD_URL=${{env.UPLOAD_URL}}" 
+          echo "OUTPUT_DIR=${{env.OUTPUT_DIR}}" 
+          echo "DO_CORE=${{env.DO_CORE}}" 
+          echo "DO_NODE=${{env.DO_NODE}}"
       - name: Checkout Debos Repository
         uses: actions/checkout@v4
         with:

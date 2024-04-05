@@ -7,10 +7,10 @@ on:
         default: "dev"
       core_branch:
         type: string
-        default: None
+        default: ""
       debos_branch:
         type: string
-        default: None
+        default: ""
       repo:
         type: string
         default: "neon-debos"
