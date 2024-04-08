@@ -87,16 +87,16 @@ for platform in ${platforms}; do
   fi
 
   # Ensure directories exist
-  [ -d "${output_path}${repo_ref}" ] || mkdir -p "${output_path}${repo_ref}"
-  [ -d "${update_path}${repo_ref}" ] || mkdir -p "${update_path}${repo_ref}"
+  [ -d "${output_path}${repo_ref}" ] || mkdir -p "${output_path}${build_ref}"
+  [ -d "${update_path}${repo_ref}" ] || mkdir -p "${update_path}${build_ref}"
 
   # Add `download_url` metadata to json output
-  url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")${repo_ref}/${image_id}.img.xz"
+  url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")${build_ref}/${image_id}.img.xz"
   sed -i -e "s|^{|{\n  \"download_url\": \"${url}\",|g" "${debos_dir}/output/"*.json
   cp "${debos_dir}/output/${image_id}.json" "${os_dir}"  # Copy metadata for upload/parse
-  mv "${debos_dir}/output/${image_id}.img.xz" "${output_path}${repo_ref}/"  # Image File
-  mv "${debos_dir}/output/${image_id}.squashfs" "${update_path}${repo_ref}/"  # Update File
-  mv "${debos_dir}/output/${image_id}.json" "${update_path}${repo_ref}/"  # Update Metadata
+  mv "${debos_dir}/output/${image_id}.img.xz" "${output_path}${build_ref}/"  # Image File
+  mv "${debos_dir}/output/${image_id}.squashfs" "${update_path}${build_ref}/"  # Update File
+  mv "${debos_dir}/output/${image_id}.json" "${update_path}${build_ref}/"  # Update Metadata
 done
 
 echo "completed ${timestamp}"
