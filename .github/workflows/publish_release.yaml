@@ -84,7 +84,8 @@ jobs:
           "debian-neon-image.yml" \
           "${{env.PLATFORMS}}" \
           "${{env.OUTPUT_DIR}}" \
-          "${{env.UPLOAD_URL}}"
+          "${{env.UPLOAD_URL}}" \
+          "${{env.REF}}"
       - name: Run Neon OS Node Build
         if: env.DO_NODE == 'true'
         run: |
@@ -94,7 +95,8 @@ jobs:
           "debian-node-image.yml" \
           "${{env.PLATFORMS}}" \
           "${{env.OUTPUT_DIR}}" \
-          "${{env.UPLOAD_URL}}"
+          "${{env.UPLOAD_URL}}" \
+          "${{env.REF}}"
       - name: Stop Docker Build Containers
         if: failure() || cancelled()
         run: |

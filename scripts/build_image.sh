@@ -33,6 +33,7 @@ recipe=${3}  # debian-neon-image.yml, debian-node-image.yml
 platforms=${4}  # "rpi4 opi5"
 output_dir=${5}  # /var/www/html/app/files/neon_images
 base_url=${6}  # https://2222.us
+build_ref=${7}
 os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
 mem_limit=${MEM_LIMIT:-"32G"}
@@ -46,7 +47,7 @@ chmod ugo+x "${debos_dir}/scripts/"*
 
 for platform in ${platforms}; do
   image_id="${recipe%.*}-${platform}_${timestamp}"
-  build_version=$(python3 "${os_dir}/scripts/get_build_version.py" "${recipe%.*}" "${platform}" "${repo_ref}" "${timestamp}")
+  build_version=$(python3 "${os_dir}/scripts/get_build_version.py" "${recipe%.*}" "${platform}" "${build_ref}" "${timestamp}")
   # TODO: Refactor builds to be platform-specific and not device-specific
   if [ "${platform}" == "rpi4" ]; then
     device="mark_2"
@@ -86,16 +87,16 @@ for platform in ${platforms}; do
   fi
 
   # Ensure directories exist
-  [ -d "${output_path}${repo_ref}" ] || mkdir -p "${output_path}${repo_ref}"
-  [ -d "${update_path}${repo_ref}" ] || mkdir -p "${update_path}${repo_ref}"
+  [ -d "${output_path}${build_ref}" ] || mkdir -p "${output_path}${build_ref}"
+  [ -d "${update_path}${build_ref}" ] || mkdir -p "${update_path}${build_ref}"
 
   # Add `download_url` metadata to json output
-  url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")${repo_ref}/${image_id}.img.xz"
+  url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")${build_ref}/${image_id}.img.xz"
   sed -i -e "s|^{|{\n  \"download_url\": \"${url}\",|g" "${debos_dir}/output/"*.json
   cp "${debos_dir}/output/${image_id}.json" "${os_dir}"  # Copy metadata for upload/parse
-  mv "${debos_dir}/output/${image_id}.img.xz" "${output_path}${repo_ref}/"  # Image File
-  mv "${debos_dir}/output/${image_id}.squashfs" "${update_path}${repo_ref}/"  # Update File
-  mv "${debos_dir}/output/${image_id}.json" "${update_path}${repo_ref}/"  # Update Metadata
+  mv "${debos_dir}/output/${image_id}.img.xz" "${output_path}${build_ref}/"  # Image File
+  mv "${debos_dir}/output/${image_id}.squashfs" "${update_path}${build_ref}/"  # Update File
+  mv "${debos_dir}/output/${image_id}.json" "${update_path}${build_ref}/"  # Update Metadata
 done
 
 echo "completed ${timestamp}"
