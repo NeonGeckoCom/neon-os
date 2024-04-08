@@ -33,6 +33,7 @@ recipe=${3}  # debian-neon-image.yml, debian-node-image.yml
 platforms=${4}  # "rpi4 opi5"
 output_dir=${5}  # /var/www/html/app/files/neon_images
 base_url=${6}  # https://2222.us
+build_ref=${7}
 os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
 mem_limit=${MEM_LIMIT:-"32G"}
@@ -46,7 +47,7 @@ chmod ugo+x "${debos_dir}/scripts/"*
 
 for platform in ${platforms}; do
   image_id="${recipe%.*}-${platform}_${timestamp}"
-  build_version=$(python3 "${os_dir}/scripts/get_build_version.py" "${recipe%.*}" "${platform}" "${repo_ref}" "${timestamp}")
+  build_version=$(python3 "${os_dir}/scripts/get_build_version.py" "${recipe%.*}" "${platform}" "${build_ref}" "${timestamp}")
   # TODO: Refactor builds to be platform-specific and not device-specific
   if [ "${platform}" == "rpi4" ]; then
     device="mark_2"
