@@ -1,8 +1,8 @@
-# Neon OS Beta Release 24.04.19b1
+# Neon OS Beta Release 24.04.22b1
 This is an automated release
 
-tag=24.04.19b1
+tag=24.04.22b1
 
 ## Release Images
-- [debian-neon-image-opi5 24.04.19b5](https://2222.us/app/files/neon_images/core/opi5/dev/debian-neon-image-opi5_2024-04-19_20_32.img.xz)
-- [debian-neon-image-rpi4 24.04.19b5](https://2222.us/app/files/neon_images/core/rpi4/dev/debian-neon-image-rpi4_2024-04-19_20_32.img.xz)
+- [debian-neon-image-opi5 24.04.22b6](https://2222.us/app/files/neon_images/core/opi5/dev/debian-neon-image-opi5_2024-04-22_17_12.img.xz)
+- [debian-neon-image-rpi4 24.04.22b6](https://2222.us/app/files/neon_images/core/rpi4/dev/debian-neon-image-rpi4_2024-04-22_17_12.img.xz)
