@@ -4,6 +4,30 @@
     edition: Core
     name: debian-neon-image-opi5
     platform: opi5
+    time: 1715822220.0
+  build_version: 24.05.15b10
+  core:
+    sha: df7657b8082c380272ee841cd0ba6e1d7fd613ab
+    time: 1715807683.0
+    version: 24.5.15a9
+  download_url: https://2222.us/app/files/neon_images/core/opi5/dev/debian-neon-image-opi5_2024-05-15_18_17.img.xz
+  image:
+    sha: 58a60060988753ba3ca4ecf3783bbe66164df3ce
+    time: 1714681850.0
+    version: 24.5.2a2
+  initramfs:
+    md5: 0c0f19ca0a5168dd54cc62fc2c336176
+    path: /boot/uInitrd
+  kernel:
+    filename: Image
+    md5: fec3372f0c4616f26a9520dc39ef0e7a
+    version: 5.10.110-gecko+
+- base_os:
+    arch: arm64
+    device: opi5
+    edition: Core
+    name: debian-neon-image-opi5
+    platform: opi5
     time: 1715811480.0
   build_version: 24.05.15b9
   core:
