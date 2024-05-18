@@ -4,6 +4,30 @@
     edition: Core
     name: debian-neon-image-rpi4
     platform: rpi4
+    time: 1715993520.0
+  build_version: 24.05.17b14
+  core:
+    sha: e2ef8081444d2ce46a53abcd95b15aab09a20470
+    time: 1715982646.0
+    version: 24.5.17a12
+  download_url: https://2222.us/app/files/neon_images/core/rpi4/dev/debian-neon-image-rpi4_2024-05-17_17_52.img.xz
+  image:
+    sha: 058d2a903fba75fda683925e678534bbe993d213
+    time: 1715895496.0
+    version: 24.5.16a3
+  initramfs:
+    md5: 79b3afac34c2b9df335f1a299232599b
+    path: /boot/firmware/initramfs
+  kernel:
+    filename: kernel8.img
+    md5: 6cb8d6b66404ebad90052aabd1ae403c
+    version: 6.1.77-gecko+
+- base_os:
+    arch: arm64
+    device: mark_2
+    edition: Core
+    name: debian-neon-image-rpi4
+    platform: rpi4
     time: 1715913780.0
   build_version: 24.05.16b13
   core:
