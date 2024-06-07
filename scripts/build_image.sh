@@ -28,12 +28,20 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 debos_dir=${1}  # Absolute path to already cloned neon_debos
-repo_ref=${2}  # dev, master
+core_ref=${2}  # CORE dev, master
 recipe=${3}  # debian-neon-image.yml, debian-node-image.yml
 platforms=${4}  # "rpi4 opi5"
 output_dir=${5}  # /var/www/html/app/files/neon_images
 base_url=${6}  # https://2222.us
-build_ref=${7}
+build_ref=${7}  # RELEASE dev, master
+
+# Normalize build_ref
+if [[ "${build_ref}" == "master" || "${build_ref}" == "stable" ]]; then
+  build_ref="master"
+else
+  build_ref="dev"
+fi
+
 os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
 mem_limit=${MEM_LIMIT:-"32G"}
@@ -42,7 +50,7 @@ core_limit=${CORE_LIMIT:-8}
 debos_version="$(python3 "${debos_dir}/version.py")"
 
 [ -d "${debos_dir}/output" ] || mkdir "${debos_dir}/output"
-echo "Building recipe with core=${repo_ref} recipe=${debos_version}"
+echo "Building recipe with core=${core_ref} recipe=${debos_version}"
 chmod ugo+x "${debos_dir}/scripts/"*
 
 for platform in ${platforms}; do
@@ -56,24 +64,30 @@ for platform in ${platforms}; do
     device="${platform}"
     kernel_version="5.10.110-gecko+"
   fi
-  docker run --rm \
+  docker run --rm -d \
   --device /dev/kvm \
   --workdir /image_build \
   --mount type=bind,source="${debos_dir}",destination=/image_build \
   --group-add=108 \
   --security-opt label=disable \
-  --name neon_debos_ghaction \
+  --name "neon_debos_ghaction_${platform}" \
   godebos/debos "${recipe}" \
   -t platform:"${platform}" \
   -t device:"${device}" \
   -t kernel_version:"${kernel_version}" \
   -t architecture:arm64 \
   -t image:"${image_id}" \
-  -t neon_core:"${repo_ref}" \
+  -t neon_core:"${core_ref}" \
   -t neon_debos:"${debos_version}" \
   -t build_version:"${build_version}" \
   -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2
+  echo "Started build: ${platform}"
+done
+
+for platform in ${platforms}; do
+  docker logs -f "neon_debos_ghaction_${platform}"
   echo "Completed build: ${platform}"
+  image_id="${recipe%.*}-${platform}_${timestamp}"
 
   # Determine Server Path for outputs
   output_path="${output_dir}/${platform}/"
@@ -86,17 +100,32 @@ for platform in ${platforms}; do
     update_path="${output_dir}/core/${platform}/updates/"
   fi
 
-  # Ensure directories exist
-  [ -d "${output_path}${build_ref}" ] || mkdir -p "${output_path}${build_ref}"
-  [ -d "${update_path}${build_ref}" ] || mkdir -p "${update_path}${build_ref}"
-
   # Add `download_url` metadata to json output
-  url="${base_url}$(sed -e "s|^/var/www/html||g" <<< "${output_path}")${build_ref}/${image_id}.img.xz"
+  url_path=${output_path#*www\/}
+  url_path=${url_path#html\/}
+  url="${base_url}/${url_path}${build_ref}/${image_id}.img.xz"
+  #    download.com / neon_os/node/opi5/ /
+  echo "url=${url}"
   sed -i -e "s|^{|{\n  \"download_url\": \"${url}\",|g" "${debos_dir}/output/"*.json
-  cp "${debos_dir}/output/${image_id}.json" "${os_dir}"  # Copy metadata for upload/parse
-  mv "${debos_dir}/output/${image_id}.img.xz" "${output_path}${build_ref}/"  # Image File
-  mv "${debos_dir}/output/${image_id}.squashfs" "${update_path}${build_ref}/"  # Update File
-  mv "${debos_dir}/output/${image_id}.json" "${update_path}${build_ref}/"  # Update Metadata
+
+  # Copy metadata for GH Release and Metadata
+  cp "${debos_dir}/output/${image_id}.json" "${os_dir}"
+
+  echo "Move outputs to ${output_path}"
+  if [[ ${output_path} == "/"* ]]; then
+    # Ensure directories exist
+    [ -d "${output_path}${build_ref}" ] || mkdir -p "${output_path}${build_ref}"
+    [ -d "${update_path}${build_ref}" ] || mkdir -p "${update_path}${build_ref}"
+
+    mv "${debos_dir}/output/${image_id}.img.xz" "${output_path}${build_ref}/"  # Image File
+    mv "${debos_dir}/output/${image_id}.squashfs" "${update_path}${build_ref}/"  # Update File
+    mv "${debos_dir}/output/${image_id}.json" "${update_path}${build_ref}/"  # Update Metadata
+  else
+    # Remote output, scp to output path
+    scp "${debos_dir}/output/${image_id}.img.xz" "${output_path}${build_ref}/" && rm -f "${debos_dir}/output/${image_id}.img.xz"  # Image File
+    scp "${debos_dir}/output/${image_id}.squashfs" "${update_path}${build_ref}/" && rm -f "${debos_dir}/output/${image_id}.squashfs"  # Update File
+    scp "${debos_dir}/output/${image_id}.json" "${update_path}${build_ref}/" && rm -f "${debos_dir}/output/${image_id}.json"  # Update Metadata
+  fi
 done
 
 echo "completed ${timestamp}"

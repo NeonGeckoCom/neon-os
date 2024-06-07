@@ -153,6 +153,6 @@ def write_changelog(new_images: List[dict]):
 
 
 if __name__ == "__main__":
-    is_beta = argv[1] == "dev"
+    is_beta = argv[1] in ("dev", "beta")
     images = update_build_indices(is_beta)
     write_changelog(images)
