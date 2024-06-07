@@ -100,7 +100,7 @@ jobs:
       - name: Stop Docker Build Containers
         if: failure() || cancelled()
         run: |
-          docker kill neon_debos_ghaction
+          docker kill neon_debos_ghaction*
       - name: Update Metadata
         id: metadata
         run: |
