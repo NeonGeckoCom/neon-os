@@ -85,7 +85,7 @@ for platform in ${platforms}; do
 done
 
 for platform in ${platforms}; do
-  docker logs -f "neon_debos_ghaction_${platform}"
+  docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
   echo "Completed build: ${platform}"
   image_id="${recipe%.*}-${platform}_${timestamp}"
 
