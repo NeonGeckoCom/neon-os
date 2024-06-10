@@ -9,14 +9,14 @@ env:
   DEBOS_REF: ${{ github.event.client_payload.debos_ref || github.event.client_payload.ref }}
   CORE_REF: ${{ github.event.client_payload.core_ref || github.event.client_payload.ref }}
   PLATFORMS: "rpi4 opi5"
-  UPLOAD_URL: "https://2222.us"
-  OUTPUT_DIR: /var/www/html/app/files/neon_images
+  UPLOAD_URL: "https://download.neonaiservices.com"
+  OUTPUT_DIR: neon@download.neonaiservices.com:/home/neon/nginx/www/neon_os
   DO_CORE: ${{ contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo) }}
   DO_NODE: ${{ contains(fromJson('["neon-debos", "neon-nodes"]'), github.event.client_payload.repo) }}
 
 jobs:
   build_images:
-    runs-on: 2222.us
+    runs-on: image-builder
     steps:
       - name: Log Job
         run: |
