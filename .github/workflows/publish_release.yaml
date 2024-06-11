@@ -35,30 +35,6 @@ jobs:
           repository: NeonGeckoCom/neon_debos
           path: action/neon_debos
           lfs: False
-      - name: Create LFS file list
-        run: |
-          cd action/neon_debos
-          git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
-          cd ../..
-      - name: Restore LFS cache
-        uses: actions/cache@v3
-        id: lfs-cache
-        with:
-          path: action/neon_debos/.git/lfs
-          key: ${{ runner.os }}-lfs-${{ hashFiles('action/neon_debos/.lfs-assets-id') }}-v1
-      - name: Ensure LFS files are pulled
-        if: steps.lfs-cache.outputs.cache-hit != 'true'
-        run: |
-          cd action/neon_debos
-          git lfs pull
-          cd ../..
-      - name: Save LFS Cache
-        if: steps.lfs-cache.outputs.cache-hit != 'true'
-        id: lfs-cache-save
-        uses: actions/cache/save@v3
-        with:
-          path: action/neon_debos/.git/lfs
-          key: ${{ runner.os }}-lfs-${{ hashFiles('action/neon_debos/.lfs-assets-id') }}-v1
       - name: Check for Debos base image downloads
         run: | 
           [ -f action/neon_debos/base_images/download_base_images.py ] && \
