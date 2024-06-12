@@ -37,23 +37,23 @@ build_ref=${7}  # RELEASE dev, master
 
 disable_fakemachine=${NO_FAKEMACHINE:-false}
 # Build Docker Command
-docker_args=("--device /dev/kvm" \
-  "--workdir /image_build" \
-  "--mount type=bind,source=\"${debos_dir}\",destination=/image_build" \
+docker_args=("--device" "/dev/kvm" \
+  "--workdir" "/image_build" \
+  "--mount" "type=bind,source=\"${debos_dir}\",destination=/image_build" \
   "--group-add=108" \
-  "--security-opt label=disable" \
-  "--name \"neon_debos_ghaction_${platform}\"")
+  "--security-opt" "label=disable" \
+  "--name" "neon_debos_ghaction_${platform}")
 debos_args=("-t platform:\"${platform}\"" \
-  "-t device:\"${device}\"" \
-  "-t kernel_version:\"${kernel_version}\"" \
-  "-t architecture:arm64" \
-  "-t image:\"${image_id}\"" \
-  "-t neon_core:\"${core_ref}\"" \
-  "-t neon_debos:\"${debos_version}\"" \
-  "-t build_version:\"${build_version}\"" \
-  "-t build_cores:\"${core_limit}\"" \
-  "-m \"${mem_limit}\"" \
-  "-c \"${core_limit}\"")
+  "-t" "device:\"${device}\"" \
+  "-t" "kernel_version:\"${kernel_version}\"" \
+  "-t" "architecture:arm64" \
+  "-t" "image:\"${image_id}\"" \
+  "-t" "neon_core:\"${core_ref}\"" \
+  "-t" "neon_debos:\"${debos_version}\"" \
+  "-t" "build_version:\"${build_version}\"" \
+  "-t" "build_cores:\"${core_limit}\"" \
+  "-m" "${mem_limit}" \
+  "-c" "${core_limit}")
 if [ "${disable_fakemachine}" == "true" ]; then
   docker_args+=("--privileged=true" "--cgroupns=host")
   debos_args+=("--disable-fakemachine")
