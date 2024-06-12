@@ -85,7 +85,7 @@ for platform in ${platforms}; do
     "-m" "${mem_limit}" \
     "-c" "${core_limit}")
   if [ "${disable_fakemachine}" == "true" ]; then
-    docker_args+=("--privileged=true" "--cgroupns=host")
+    docker_args+=("--privileged" "--cgroupns=host")
     debos_args+=("--disable-fakemachine")
   fi
 
