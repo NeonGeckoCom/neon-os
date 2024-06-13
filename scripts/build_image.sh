@@ -95,7 +95,8 @@ for platform in ${platforms}; do
     godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
   else
     cd "${debos_dir}" || exit 2
-    debos "${recipe}" "${debos_args[@]}" > "${os_dir}/${platform}.log" 2>&1
+    [ -d "output" ] || mkdir "output"
+    debos "${recipe}" "${debos_args[@]}"
   fi
   echo "Started build: ${platform}"
 done
@@ -106,7 +107,7 @@ for platform in ${platforms}; do
   else
     wait && echo "Builds completed"
     cd "${os_dir}" || exit 2
-    [ -d "output" ] || mkdir "output"
+
     cat "${platform}.log"
   fi
   echo "Completed build: ${platform}"
