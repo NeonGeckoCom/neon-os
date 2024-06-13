@@ -47,6 +47,7 @@ timestamp=$(date '+%Y-%m-%d_%H_%M')
 mem_limit=${MEM_LIMIT:-"32G"}
 core_limit=${CORE_LIMIT:-8}
 disable_fakemachine=${NO_FAKEMACHINE:-false}
+no_docker=${NO_DOCKER:-false}
 
 debos_version="$(python3 "${debos_dir}/version.py")"
 
@@ -89,13 +90,22 @@ for platform in ${platforms}; do
     debos_args+=("--disable-fakemachine")
   fi
 
-  docker run --rm -d "${docker_args[@]}" \
-  godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
+  if [ "${no_docker}" == "false" ]; then
+    docker run --rm -d "${docker_args[@]}" \
+    godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
+  else
+    debos "${recipe}" "${debos_args[@]}" > "${platform}.log" 2>&1
+  fi
   echo "Started build: ${platform}"
 done
 
 for platform in ${platforms}; do
-  docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
+  if [ "${no_docker}" == "false" ]; then
+    docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
+  else
+    wait && echo "Builds completed"
+    cat "${platform}.log"
+  fi
   echo "Completed build: ${platform}"
   image_id="${recipe%.*}-${platform}_${timestamp}"
 
