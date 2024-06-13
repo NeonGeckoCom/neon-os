@@ -94,7 +94,8 @@ for platform in ${platforms}; do
     docker run --rm -d "${docker_args[@]}" \
     godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
   else
-    debos "${debos_dir}/${recipe}" "${debos_args[@]}" > "${platform}.log" 2>&1
+    cd "${debos_dir}" || exit 2
+    debos "${recipe}" "${debos_args[@]}" > "${os_dir}/${platform}.log" 2>&1
   fi
   echo "Started build: ${platform}"
 done
@@ -104,6 +105,8 @@ for platform in ${platforms}; do
     docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
   else
     wait && echo "Builds completed"
+    cd "${os_dir}" || exit 2
+    [ -d "output" ] || mkdir "output"
     cat "${platform}.log"
   fi
   echo "Completed build: ${platform}"
