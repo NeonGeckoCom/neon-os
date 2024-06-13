@@ -92,7 +92,7 @@ for platform in ${platforms}; do
 
   if [ "${no_docker}" == "false" ]; then
     docker run --rm -d "${docker_args[@]}" \
-    godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
+    ghcr.io/go-debos/debos:main "${recipe}" "${debos_args[@]}" || exit 2
   else
     cd "${debos_dir}" || exit 2
     [ -d "output" ] || mkdir "output"
