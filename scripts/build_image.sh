@@ -94,7 +94,7 @@ for platform in ${platforms}; do
     docker run --rm -d "${docker_args[@]}" \
     godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
   else
-    debos "${recipe}" "${debos_args[@]}" > "${platform}.log" 2>&1
+    debos "${debos_dir}/${recipe}" "${debos_args[@]}" > "${platform}.log" 2>&1
   fi
   echo "Started build: ${platform}"
 done
