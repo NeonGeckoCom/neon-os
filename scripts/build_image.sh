@@ -27,6 +27,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+set -eE
+
 debos_dir=${1}  # Absolute path to already cloned neon_debos
 core_ref=${2}  # CORE dev, master
 recipe=${3}  # debian-neon-image.yml, debian-node-image.yml
@@ -85,7 +87,7 @@ for platform in ${platforms}; do
 done
 
 for platform in ${platforms}; do
-  docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
+  docker logs -f "neon_debos_ghaction_${platform}" 2>/dev/null || echo "${platform} container already exited"
   echo "Completed build: ${platform}"
   image_id="${recipe%.*}-${platform}_${timestamp}"
 
