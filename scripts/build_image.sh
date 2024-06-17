@@ -46,8 +46,21 @@ fi
 
 os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
-mem_limit=${MEM_LIMIT:-"32G"}
+mem_limit=${MEM_LIMIT:-"32G"}  #
 core_limit=${CORE_LIMIT:-8}
+run_sequentially=false
+
+total_cores=$(nproc)
+total_mem_gi=$(awk '/^Mem/ {print $7}' <(free -g))
+num_platforms=${#platforms[@]}
+
+if [ $((total_cores / num_platforms)) -gt "${core_limit}" ]; then
+  echo "Core limited, run builds sequentially"
+  run_sequentially=true
+elif [ $((total_mem_gi / num_platforms )) -gt "$(echo "${mem_limit}" | tr -dc '0-9')" ]; then
+  echo "Memory limited, run builds sequentially"
+  run_sequentially=true
+fi
 
 debos_version="$(python3 "${debos_dir}/version.py")"
 
@@ -84,11 +97,17 @@ for platform in ${platforms}; do
   -t build_version:"${build_version}" \
   -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2
   echo "Started build: ${platform}"
+  if [ "${run_sequentially}" == "true" ]; then
+    docker logs -f "neon_debos_ghaction_${platform}"
+    echo "Completed build: ${platform}"
+  fi
 done
 
 for platform in ${platforms}; do
-  docker logs -f "neon_debos_ghaction_${platform}" 2>/dev/null || echo "${platform} container already exited"
-  echo "Completed build: ${platform}"
+  if [ "${run_sequentially}" != "true" ]; then
+    docker logs -f "neon_debos_ghaction_${platform}" 2>/dev/null || echo "${platform} container already exited"
+    echo "Completed build: ${platform}"
+  fi
   image_id="${recipe%.*}-${platform}_${timestamp}"
 
   # Determine Server Path for outputs
