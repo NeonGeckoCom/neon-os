@@ -77,7 +77,7 @@ for platform in ${platforms}; do
     -t neon_core:"${core_ref}" \
     -t neon_debos:"${debos_version}" \
     -t build_version:"${build_version}" \
-    -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" > "${output_dir}/${platform}.log" 2>&1 &
+    -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" > "${os_dir}/${platform}.log" 2>&1 &
   else
     docker run --rm -d \
     --device /dev/kvm \
