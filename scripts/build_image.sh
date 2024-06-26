@@ -35,6 +35,8 @@ output_dir=${5}  # /var/www/html/app/files/neon_images
 base_url=${6}  # https://2222.us
 build_ref=${7}  # RELEASE dev, master
 
+set -eE
+
 # Normalize build_ref
 if [[ "${build_ref}" == "master" || "${build_ref}" == "stable" ]]; then
   build_ref="master"
@@ -68,6 +70,7 @@ for platform in ${platforms}; do
     kernel_version="5.10.110-gecko+"
   fi
   if [ "${native_build}" == "true" ]; then
+    cd "${debos_dir}" || exit 2
     debos "${debos_dir}/${recipe}" \
     -t platform:"${platform}" \
     -t device:"${device}" \
