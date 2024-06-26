@@ -68,7 +68,7 @@ for platform in ${platforms}; do
     kernel_version="5.10.110-gecko+"
   fi
   if [ "${native_build}" == "true" ]; then
-    debos "${recipe}" \
+    debos "${debos_dir}/${recipe}" \
     -t platform:"${platform}" \
     -t device:"${device}" \
     -t kernel_version:"${kernel_version}" \
