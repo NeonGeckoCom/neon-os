@@ -95,4 +95,9 @@ jobs:
           commit: ${{ github.ref }}
           prerelease: true
           bodyFile: "${{ github.workspace }}/action/neon-os/release_notes.md"
+      - name: Upload Build Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Debos logs
+          path: action/neon-os/*.log
 

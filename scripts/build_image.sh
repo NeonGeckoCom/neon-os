@@ -107,7 +107,6 @@ for platform in ${platforms}; do
   if [ "${native_build}" == "true" ]; then
     echo "Waiting for ${platform} build to complete"
     wait
-    cat "${os_dir}/${platform}.log"
   else
     docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
   fi
