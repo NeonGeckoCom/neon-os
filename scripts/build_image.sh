@@ -35,12 +35,17 @@ output_dir=${5}  # /var/www/html/app/files/neon_images
 base_url=${6}  # https://2222.us
 build_ref=${7}  # RELEASE dev, master
 
+set -eE
+
 # Normalize build_ref
 if [[ "${build_ref}" == "master" || "${build_ref}" == "stable" ]]; then
   build_ref="master"
 else
   build_ref="dev"
 fi
+
+native_build=false
+which debos && native_build=true
 
 os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
@@ -64,28 +69,47 @@ for platform in ${platforms}; do
     device="${platform}"
     kernel_version="5.10.110-gecko+"
   fi
-  docker run --rm -d \
-  --device /dev/kvm \
-  --workdir /image_build \
-  --mount type=bind,source="${debos_dir}",destination=/image_build \
-  --group-add=108 \
-  --security-opt label=disable \
-  --name "neon_debos_ghaction_${platform}" \
-  godebos/debos "${recipe}" \
-  -t platform:"${platform}" \
-  -t device:"${device}" \
-  -t kernel_version:"${kernel_version}" \
-  -t architecture:arm64 \
-  -t image:"${image_id}" \
-  -t neon_core:"${core_ref}" \
-  -t neon_debos:"${debos_version}" \
-  -t build_version:"${build_version}" \
-  -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2
+  if [ "${native_build}" == "true" ]; then
+    cd "${debos_dir}" || exit 2
+    debos "${debos_dir}/${recipe}" \
+    -t platform:"${platform}" \
+    -t device:"${device}" \
+    -t kernel_version:"${kernel_version}" \
+    -t architecture:arm64 \
+    -t image:"${image_id}" \
+    -t neon_core:"${core_ref}" \
+    -t neon_debos:"${debos_version}" \
+    -t build_version:"${build_version}" \
+    -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" > "${os_dir}/${platform}.log" 2>&1 &
+  else
+    docker run --rm -d \
+    --device /dev/kvm \
+    --workdir /image_build \
+    --mount type=bind,source="${debos_dir}",destination=/image_build \
+    --group-add=108 \
+    --security-opt label=disable \
+    --name "neon_debos_ghaction_${platform}" \
+    godebos/debos "${recipe}" \
+    -t platform:"${platform}" \
+    -t device:"${device}" \
+    -t kernel_version:"${kernel_version}" \
+    -t architecture:arm64 \
+    -t image:"${image_id}" \
+    -t neon_core:"${core_ref}" \
+    -t neon_debos:"${debos_version}" \
+    -t build_version:"${build_version}" \
+    -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2
+  fi
   echo "Started build: ${platform}"
 done
 
 for platform in ${platforms}; do
-  docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
+  if [ "${native_build}" == "true" ]; then
+    echo "Waiting for ${platform} build to complete"
+    wait
+  else
+    docker logs -f "neon_debos_ghaction_${platform}" || echo "${platform} container already exited"
+  fi
   echo "Completed build: ${platform}"
   image_id="${recipe%.*}-${platform}_${timestamp}"
 
