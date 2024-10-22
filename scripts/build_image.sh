@@ -45,7 +45,7 @@ else
 fi
 
 native_build=false
-which debos && native_build=true
+[ -e "$(which debos)" ] && native_build=true
 
 os_dir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 timestamp=$(date '+%Y-%m-%d_%H_%M')
@@ -102,6 +102,7 @@ for platform in ${platforms}; do
   fi
 
   if [ "${native_build}" == "true" ]; then
+    echo "Native Build: ${platform}"
     cd "${debos_dir}" || exit 2
     debos "${debos_args[@]}" > "${os_dir}/${platform}.log" 2>&1 &
   else
