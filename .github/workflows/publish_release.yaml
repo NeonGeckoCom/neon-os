@@ -50,7 +50,8 @@ jobs:
         with:
           repository: NeonGeckoCom/neon-os
           path: action/neon-os
-          ref: master
+          ref: FEAT_BuildWithoutKVM
+          # TODO: Revert ref to master
       - name: Run Neon OS Core Build
         if: env.DO_CORE == 'true'
         run: |
