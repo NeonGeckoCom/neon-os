@@ -82,23 +82,37 @@ for platform in ${platforms}; do
     -t build_version:"${build_version}" \
     -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" > "${os_dir}/${platform}.log" 2>&1 &
   else
-    docker run --rm -d \
-    --device /dev/kvm \
-    --workdir /image_build \
-    --mount type=bind,source="${debos_dir}",destination=/image_build \
+    docker_args=(
+    --workdir /image_build
+    --mount "type=bind,source=${debos_dir},destination=/image_build"
     --group-add=108 \
     --security-opt label=disable \
     --name "neon_debos_ghaction_${platform}" \
-    godebos/debos "${recipe}" \
-    -t platform:"${platform}" \
-    -t device:"${device}" \
-    -t kernel_version:"${kernel_version}" \
-    -t architecture:arm64 \
-    -t image:"${image_id}" \
-    -t neon_core:"${core_ref}" \
-    -t neon_debos:"${debos_version}" \
-    -t build_version:"${build_version}" \
-    -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" || exit 2
+    )
+    debos_args=(
+    -t platform:"${platform}"
+    -t device:"${device}"
+    -t kernel_version:"${kernel_version}"
+    -t architecture:arm64
+    -t image:"${image_id}"
+    -t neon_core:"${core_ref}"
+    -t neon_debos:"${debos_version}"
+    -t build_version:"${build_version}"
+    -t build_cores:"${core_limit}"
+    -m "${mem_limit}"
+    -c "${core_limit}"
+    )
+
+    # Either pass the `kvm` device through to Docker OR run the process without a fakemachine backend
+    if [ -e /dev/kvm ]; then
+      docker_args+=(--device /dev/kvm)
+    else
+      echo "no kvm"
+      debos_args+=("--disable-fakemachine")
+    fi
+
+    docker run --rm -d "${docker_args[@]}" \
+    godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
   fi
   echo "Started build: ${platform}"
 done
