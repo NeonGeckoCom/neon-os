@@ -69,27 +69,9 @@ for platform in ${platforms}; do
     device="${platform}"
     kernel_version="5.10.110-gecko+"
   fi
-  if [ "${native_build}" == "true" ]; then
-    cd "${debos_dir}" || exit 2
-    debos "${debos_dir}/${recipe}" \
-    -t platform:"${platform}" \
-    -t device:"${device}" \
-    -t kernel_version:"${kernel_version}" \
-    -t architecture:arm64 \
-    -t image:"${image_id}" \
-    -t neon_core:"${core_ref}" \
-    -t neon_debos:"${debos_version}" \
-    -t build_version:"${build_version}" \
-    -t build_cores:"${core_limit}" -m "${mem_limit}" -c "${core_limit}" > "${os_dir}/${platform}.log" 2>&1 &
-  else
-    docker_args=(
-    --workdir /image_build
-    --mount "type=bind,source=${debos_dir},destination=/image_build"
-    --group-add=108 \
-    --security-opt label=disable \
-    --name "neon_debos_ghaction_${platform}" \
-    )
-    debos_args=(
+
+  debos_args=(
+    "${debos_dir}/${recipe}"
     -t platform:"${platform}"
     -t device:"${device}"
     -t kernel_version:"${kernel_version}"
@@ -101,16 +83,28 @@ for platform in ${platforms}; do
     -t build_cores:"${core_limit}"
     -m "${mem_limit}"
     -c "${core_limit}"
-    )
+  )
+  docker_args=(
+    --workdir /image_build
+    --mount "type=bind,source=${debos_dir},destination=/image_build"
+    --group-add=108 \
+    --security-opt label=disable \
+    --name "neon_debos_ghaction_${platform}" \
+  )
 
-    # Either pass the `kvm` device through to Docker OR run the process without a fakemachine backend
-    if [ -e /dev/kvm ]; then
-      docker_args+=(--device /dev/kvm)
-    else
-      echo "no kvm"
-      debos_args+=("--disable-fakemachine")
-    fi
+  # Either pass the `kvm` device through to Docker OR run the process without a fakemachine backend
+  if [ -e /dev/kvm ]; then
+    docker_args+=(--device /dev/kvm)
+  else
+    echo "no kvm"
+    debos_args+=("--disable-fakemachine")
+    docker_args+=("--privileged=true")
+  fi
 
+  if [ "${native_build}" == "true" ]; then
+    cd "${debos_dir}" || exit 2
+    debos "${debos_args[@]}" > "${os_dir}/${platform}.log" 2>&1 &
+  else
     docker run --rm -d "${docker_args[@]}" \
     godebos/debos "${recipe}" "${debos_args[@]}" || exit 2
   fi
