@@ -1,5 +1,101 @@
 - base_os:
     arch: arm64
+    device: mark_2
+    edition: Core
+    name: debian-neon-image-rpi4
+    platform: rpi4
+    time: 1741997280.0
+  build_version: 25.03.14b30
+  core:
+    sha: 72c267f90455c1ce694d460d39796fd0d7275504
+    time: 1741904730.0
+    version: 25.3.13a63
+  download_url: https://download.neonaiservices.com/neon_os/core/rpi4/dev/debian-neon-image-rpi4_2025-03-14_17_08.img.xz
+  image:
+    sha: 39701e5cdc9520487ffd8b4cc2a9b62f62e12f3c
+    time: 1741971847.0
+    version: 25.3.14a3
+  initramfs:
+    md5: 205f0999bfcac4bcbb298adf29e399e7
+    path: /boot/firmware/initramfs
+  kernel:
+    filename: kernel8.img
+    md5: 6cb8d6b66404ebad90052aabd1ae403c
+    version: 6.1.77-gecko+
+- base_os:
+    arch: arm64
+    device: opi5
+    edition: Core
+    name: debian-neon-image-opi5
+    platform: opi5
+    time: 1741997280.0
+  build_version: 25.03.14b30
+  core:
+    sha: 72c267f90455c1ce694d460d39796fd0d7275504
+    time: 1741904730.0
+    version: 25.3.13a63
+  download_url: https://download.neonaiservices.com/neon_os/core/rpi4/dev/debian-neon-image-rpi4_2025-03-14_17_08.img.xz
+  image:
+    sha: 39701e5cdc9520487ffd8b4cc2a9b62f62e12f3c
+    time: 1741971847.0
+    version: 25.3.14a3
+  initramfs:
+    md5: 6dded882a13269f467379b51eae681f9
+    path: /boot/uInitrd
+  kernel:
+    filename: Image
+    md5: fec3372f0c4616f26a9520dc39ef0e7a
+    version: 5.10.110-gecko+
+- base_os:
+    arch: arm64
+    device: mark_2
+    edition: Node
+    name: debian-node-image-rpi4
+    platform: rpi4
+    time: 1741999260.0
+  build_version: 25.03.14b8
+  core:
+    sha: 72c267f90455c1ce694d460d39796fd0d7275504
+    time: 1741904730.0
+    version: 0.0.2a4
+  download_url: https://download.neonaiservices.com/neon_os/node/rpi4/dev/debian-node-image-rpi4_2025-03-14_17_41.img.xz
+  image:
+    sha: 39701e5cdc9520487ffd8b4cc2a9b62f62e12f3c
+    time: 1741971847.0
+    version: 25.3.14a3
+  initramfs:
+    md5: 205f0999bfcac4bcbb298adf29e399e7
+    path: /boot/firmware/initramfs
+  kernel:
+    filename: kernel8.img
+    md5: 6cb8d6b66404ebad90052aabd1ae403c
+    version: 6.1.77-gecko+
+- base_os:
+    arch: arm64
+    device: opi5
+    edition: Node
+    name: debian-node-image-opi5
+    platform: opi5
+    time: 1741999260.0
+  build_version: 25.03.14b8
+  core:
+    sha: 72c267f90455c1ce694d460d39796fd0d7275504
+    time: 1741904730.0
+    version: 0.0.2a4
+  download_url: https://download.neonaiservices.com/neon_os/node/rpi4/dev/debian-node-image-rpi4_2025-03-14_17_41.img.xz
+  image:
+    sha: 39701e5cdc9520487ffd8b4cc2a9b62f62e12f3c
+    time: 1741971847.0
+    version: 25.3.14a3
+  initramfs:
+    md5: 6dded882a13269f467379b51eae681f9
+    path: /boot/uInitrd
+  kernel:
+    filename: Image
+    md5: fec3372f0c4616f26a9520dc39ef0e7a
+    version: 5.10.110-gecko+
+- base_os:
+    arch: arm64
     device: opi5
     edition: Core
     name: debian-neon-image-opi5
