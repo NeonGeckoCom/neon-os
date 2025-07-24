@@ -1,8 +1,8 @@
-# Neon OS Beta Release 25.06.25b1
+# Neon OS Beta Release 25.07.23b1
 This is an automated release
 
-tag=25.06.25b1
+tag=25.07.23b1
 
 ## Release Images
-- [debian-neon-image-opi5 25.06.25b41](https://download.neonaiservices.com/neon_os/core/rpi4/dev/debian-neon-image-rpi4_2025-06-25_16_04.img.xz)
-- [debian-neon-image-rpi4 25.06.25b41](https://download.neonaiservices.com/neon_os/core/rpi4/dev/debian-neon-image-rpi4_2025-06-25_16_04.img.xz)
+- [debian-neon-image-opi5 25.07.23b42](https://download.neonaiservices.com/neon_os/core/rpi4/dev/debian-neon-image-rpi4_2025-07-23_23_43.img.xz)
+- [debian-neon-image-rpi4 25.07.23b42](https://download.neonaiservices.com/neon_os/core/rpi4/dev/debian-neon-image-rpi4_2025-07-23_23_43.img.xz)
