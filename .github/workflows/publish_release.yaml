@@ -8,7 +8,7 @@ env:
   REF: ${{ github.event.client_payload.ref || 'dev' }}
   DEBOS_REF: ${{ github.event.client_payload.debos_ref || github.event.client_payload.ref }}
   CORE_REF: ${{ github.event.client_payload.core_ref || github.event.client_payload.ref }}
-  PLATFORMS: "rpi4 opi5"
+  PLATFORMS: "rpi4"
   UPLOAD_URL: "https://download.neonaiservices.com"
   OUTPUT_DIR: neon@download.neonaiservices.com:/home/neon/nginx/www/neon_os
   DO_CORE: ${{ contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo) }}
@@ -30,6 +30,8 @@ jobs:
           echo "OUTPUT_DIR=${{env.OUTPUT_DIR}}" 
           echo "DO_CORE=${{env.DO_CORE}}" 
           echo "DO_NODE=${{env.DO_NODE}}"
+          echo "CORE_LIMIT=${{env.CORE_LIMIT}}"
+          echo "MEM_LIMIT=${{env.MEM_LIMIT}}"
       - name: Checkout Debos Repository
         uses: actions/checkout@v4
         with:
