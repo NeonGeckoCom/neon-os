@@ -13,6 +13,8 @@ env:
   OUTPUT_DIR: neon@download.neonaiservices.com:/home/neon/nginx/www/neon_os
   DO_CORE: ${{ contains(fromJson('["neon-debos", "neon-core"]'), github.event.client_payload.repo) }}
   DO_NODE: ${{ contains(fromJson('["neon-debos", "neon-nodes"]'), github.event.client_payload.repo) }}
+  CORE_LIMIT: 4
+  MEM_LIMIT: 16G
 
 jobs:
   build_images:
